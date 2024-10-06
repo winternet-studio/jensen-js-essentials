@@ -1,3 +1,5 @@
+import Core from '../src/Core.js';
+
 /**
  * Functions related to information that is specific to a country, eg. address formatting, use of state and postal code fields etc.
  *
@@ -119,16 +121,15 @@ export default class CountrySpecifics {
 	 * 	- `reformat` : reformat the value according to the country's format, eg. for Canada "K1G6Z3" or "k1g-6z3" would be converted to "K1G 6Z3"
 	 * 		- this flag can also cause less strict validation rules since we can now automatically fix small inconsistencies!
 	 * 		- when used the reformatted value is returned if valid and false if returned if value is not valid
-	 * 	- `US_allowZip4` : allow the format #####-#### in United States (http://en.wikipedia.org/wiki/ZIP_code)
+	 * 	- `allowUSZip4` : allow the format #####-#### in United States (http://en.wikipedia.org/wiki/ZIP_code)
 	 * @return {boolean|string} - Normally boolean but if reformat flag is used: reformatted value if valid or false if invalid
 	 */
 	static validateZip(country, zipValue, options) {
-		var isValid = false, doReformat;
+		var isValid = false;
 		if (!options) options = {};
-		doReformat = (options.reformat > -1 ? true : false);
 
-		if (doReformat) {
-			zipValue = (zipValue === null ? '' : $.trim(String(zipValue)));
+		if (options.reformat) {
+			zipValue = (zipValue === null ? '' : Core.trim(String(zipValue)));
 		} else {
 			zipValue = (zipValue === null ? '' : String(zipValue));
 		}
@@ -137,14 +138,14 @@ export default class CountrySpecifics {
 			//exactly 5 digits or 5+4 if flag is set
 			if (/^\d{5}$/.test(zipValue)) {
 				isValid = true;
-			} else if (options.US_allowZip4 > -1 && /^\d{5}\-\d{4}$/.test(zipValue)) {
+			} else if (options.allowUSZip4 && /^\d{5}\-\d{4}$/.test(zipValue)) {
 				isValid = true;
 			}
 		} else if (country == 'CA') {
 			//require format "A1A 1A1", where A is a letter and 1 is a digit and with a space in the middle
 			if (/^[A-Z]\d[A-Z][\.\- ]?\d[A-Z]\d$/i.test(zipValue)) {
 				isValid = true;
-				if (doReformat) {
+				if (options.reformat) {
 					zipValue = zipValue.substr(0, 3).toUpperCase() +' '+ zipValue.slice(-3).toUpperCase();
 				}
 			}
@@ -152,7 +153,7 @@ export default class CountrySpecifics {
 			//require format specified on http://en.wikipedia.org/wiki/Postcodes_in_the_United_Kingdom#Validation
 			if (/^([A-Z]{1,2}\d[A-Z]?|[A-Z]{1,2}\d{2})[\.\- ]?\d[A-Z][A-Z]$/i.test(zipValue)) {
 				isValid = true;
-				if (doReformat) {
+				if (options.reformat) {
 					zipValue = zipValue.replace(/[^[A-Z]\d]/gi, '').slice(0, -3).toUpperCase() +' '+ zipValue.slice(-3).toUpperCase();
 				}
 			}
@@ -168,7 +169,7 @@ export default class CountrySpecifics {
 			}
 		} else if (country == 'NL') {
 			//4 digits followed by 2 uppercase letters (http://en.wikipedia.org/wiki/Postal_codes_in_the_Netherlands)
-			if (doReformat) {
+			if (options.reformat) {
 				if (/^\d{4}[ \-]?[A-Z]{2}$/.test(zipValue)) {
 					isValid = true;
 				}
@@ -183,13 +184,13 @@ export default class CountrySpecifics {
 			zipValue = zipValue.replace('.', '');  //some people seem to put a dot after the first two digits
 			if (/^\d{5}-?\d{3}$/.test(zipValue)) {
 				isValid = true;
-				if (doReformat) {
+				if (options.reformat) {
 					zipValue = zipValue.substr(0, 5) +'-'+ zipValue.slice(-3);
 				}
 			}
 		} else if (country == 'KR') {
 			//3 digits, a dash, then 3 digits
-			if (doReformat) {
+			if (options.reformat) {
 				if (/^\d{3}[^\d]?\d{3}$/.test(zipValue)) {
 					isValid = true;
 					zipValue = zipValue.substr(0, 3) +'-'+ zipValue.slice(-3);
@@ -203,7 +204,7 @@ export default class CountrySpecifics {
 			//for all other countries don't do validation and assume it is valid
 			isValid = true;
 		}
-		if (isValid && doReformat) {
+		if (isValid && options.reformat) {
 			isValid = zipValue;
 		}
 		return isValid;

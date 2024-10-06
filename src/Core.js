@@ -1,7 +1,34 @@
 /**
- * Core tools for numbers, arrays etc.
+ * Core tools for strings, numbers, arrays etc.
  */
 export default class Core {
+
+	/**
+	 * Trim a string
+	 *
+	 * Safe to pass any type of variable.
+	 */
+	static trim(input) {
+		if (typeof input === 'string') {
+			return input.trim();  // use built-in String.prototype.trim()
+		}
+		return input;
+	}
+
+	/**
+	 * Capitalize first letter
+	 */
+	static ucFirst(string) {  //source: https://stackoverflow.com/a/1026087/2404541
+		if (!string) return string;
+	    return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	static countWords(str) {
+		str = str.replace(/[,!\.\?\-]/g, '');  //avoid ". - , why ? !" counting as 6 words instead of 1!
+		str = str.replace(/[\r\n]+/g, ' ');  //ensure space between last one on line and first word on next line
+		str = this.trim(str);
+		return str.split(/\s+/).length;
+	}
 
 	/**
 	 * Check if variable is numeric
@@ -33,6 +60,63 @@ export default class Core {
 		if(v===null||typeof v=='undefined'||v.length==0)return false;
 		if(isNaN(v))return false;
 		return(parseInt(v,10)===parseFloat(v)?true:false);
+	}
+
+	static roundDecimals(number, numOfDecimals) {
+		var precisionNumber = Math.pow(10, numOfDecimals);
+		return Math.round(number * precisionNumber)/precisionNumber;
+	}
+
+	/**
+	 * Format a number
+	 *
+	 * Equivalent to PHP number_format().
+	 * Source: http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_number_format/
+	 *
+	 * @return {string} - Formatted string
+	 */
+	static numberFormat(number, decimals, decimalPoint, thousandsSep) {
+		// http://kevin.vanzonneveld.net
+		// + original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
+		// + improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+		// + bugfix by: Michael White (http://crestidg.com)
+		// + bugfix by: Benjamin Lupton
+		// + bugfix by: Allan Jensen (http://www.winternet.no) (fixed formatting negative numbers)
+		// * example 1: number_format(1234.5678, 2, '.', '');
+		// * returns 1: 1234.57
+
+	    var i, j, kw, kd, km;
+		var neg = '';
+
+		// Input sanitation & defaults
+		if ( isNaN(decimals = Math.abs(decimals)) ) {
+			decimals = 2;
+		}
+		if (decimalPoint == undefined) {
+			decimalPoint = '.';
+		}
+		if (thousandsSep == undefined) {
+			thousandsSep = ',';
+		}
+
+		i = parseInt(number = (+number || 0).toFixed(decimals)) + '';
+		if (i.substr(0,1) == '-') {
+			number = Math.abs(number);
+			neg = '-';
+			i = i.substr(1);
+		}
+
+		if ((j = i.length) > 3 ) {
+			j = j % 3;
+		} else {
+			j = 0;
+		}
+
+		km = (j ? i.substr(0, j) + thousandsSep : '');
+		kw = i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + thousandsSep);
+		//kd = (decimals ? decimalPoint + Math.abs(number - i).toFixed(decimals).slice(2) : '');
+		kd = (decimals ? decimalPoint + Math.abs(number - i).toFixed(decimals).replace(/-/, 0).slice(2) : '');
+		return neg + km + kw + kd;
 	}
 
 	/**
@@ -76,6 +160,12 @@ export default class Core {
 			r[r.length]=array[i];
 		}
 		return r;
+	}
+
+	static arraySum(array) {
+		return array.reduce(function(accumulator, a) {
+			return accumulator + a;
+		}, 0);
 	}
 
 }

@@ -4,7 +4,10 @@
   "type": "module",
   "description": "Some essential Javascript tools for web development",
   "main": "index.js",
-  "repository": "https://github.com/winternet-studio/jensen-js-essentials",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winternet-studio/jensen-js-essentials.git"
+  },
   "author": "Allan Jensen, WinterNet Studio",
   "license": "MIT",
   "scripts": {
