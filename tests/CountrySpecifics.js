@@ -3,6 +3,22 @@ import CountrySpecifics from '../src/CountrySpecifics.js';
 
 describe('CountrySpecifics', function() {
 
+	describe('addressFieldOrder()', function() {
+		it('', function() {
+			assert.deepEqual(CountrySpecifics.addressFieldOrder('AU'), ['city', 'state', 'zip']);
+			assert.deepEqual(CountrySpecifics.addressFieldOrder('DK'), ['zip', 'city', 'state']);
+		});
+	});
+
+	describe('addressFieldLabels()', function() {
+		it('', function() {
+			var result = CountrySpecifics.addressFieldLabels('AU');
+			assert.equal(result.city, 'Town / Suburb');
+			assert.equal(result.state, 'State / Territory');
+			assert.equal(result.zip, 'Postcode');
+		});
+	});
+
 	describe('validateZip()', function() {
 		it('', function() {
 			assert.isTrue(CountrySpecifics.validateZip('DK', '4690'));
@@ -48,6 +64,21 @@ describe('CountrySpecifics', function() {
 			assert.isTrue(CountrySpecifics.validateZip('KR', '026-490'));
 			assert.isTrue(CountrySpecifics.validateZip('KR', '026010'));
 			assert.equal(CountrySpecifics.validateZip('KR', '026010', {reformat: true}), '026-010');
+		});
+	});
+
+	describe('firstnameLastnameOrder()', function() {
+		it('', function() {
+			assert.deepEqual(CountrySpecifics.firstnameLastnameOrder('DK'), ['firstname', 'lastname']);
+			assert.deepEqual(CountrySpecifics.firstnameLastnameOrder('HU'), ['lastname', 'firstname']);
+		});
+	});
+
+	describe('dateFieldOrder()', function() {
+		it('', function() {
+			assert.deepEqual(CountrySpecifics.dateFieldOrder('DK'), ['day', 'month', 'year']);
+			assert.deepEqual(CountrySpecifics.dateFieldOrder('CA'), ['month', 'day', 'year']);
+			assert.deepEqual(CountrySpecifics.dateFieldOrder('JP'), ['year', 'month', 'day']);
 		});
 	});
 

@@ -3,7 +3,7 @@ import Core from '../src/Core.js';
 /**
  * Functions related to information that is specific to a country, eg. address formatting, use of state and postal code fields etc.
  *
- * See also: http://stackoverflow.com/questions/13438461/formatting-a-shipping-address-by-country-in-php-or-perl
+ * See also: https://stackoverflow.com/questions/13438461/formatting-a-shipping-address-by-country-in-php-or-perl
  */
 export default class CountrySpecifics {
 
@@ -84,7 +84,7 @@ export default class CountrySpecifics {
 	 *
 	 * Countries not listed here and not listed in countriesWithoutStateProvince() are countries where using state/province is optional.
 	 *
-	 * @see http://webmasters.stackexchange.com/questions/3206/what-countries-require-a-state-province-in-the-mailing-address
+	 * @see https://webmasters.stackexchange.com/questions/3206/what-countries-require-a-state-province-in-the-mailing-address
 	 *
 	 * @return {array}
 	 */
@@ -121,7 +121,7 @@ export default class CountrySpecifics {
 	 * 	- `reformat` : reformat the value according to the country's format, eg. for Canada "K1G6Z3" or "k1g-6z3" would be converted to "K1G 6Z3"
 	 * 		- this flag can also cause less strict validation rules since we can now automatically fix small inconsistencies!
 	 * 		- when used the reformatted value is returned if valid and false if returned if value is not valid
-	 * 	- `allowUSZip4` : allow the format #####-#### in United States (http://en.wikipedia.org/wiki/ZIP_code)
+	 * 	- `allowUSZip4` : allow the format #####-#### in United States (https://en.wikipedia.org/wiki/ZIP_Code)
 	 * @return {boolean|string} - Normally boolean but if reformat flag is used: reformatted value if valid or false if invalid
 	 */
 	static validateZip(country, zipValue, options) {
@@ -150,7 +150,7 @@ export default class CountrySpecifics {
 				}
 			}
 		} else if (country == 'GB') {
-			//require format specified on http://en.wikipedia.org/wiki/Postcodes_in_the_United_Kingdom#Validation
+			//require format specified on https://en.wikipedia.org/wiki/Postcodes_in_the_United_Kingdom#Validation
 			if (/^([A-Z]{1,2}\d[A-Z]?|[A-Z]{1,2}\d{2})[\.\- ]?\d[A-Z][A-Z]$/i.test(zipValue)) {
 				isValid = true;
 				if (options.reformat) {
@@ -168,7 +168,7 @@ export default class CountrySpecifics {
 				isValid = true;
 			}
 		} else if (country == 'NL') {
-			//4 digits followed by 2 uppercase letters (http://en.wikipedia.org/wiki/Postal_codes_in_the_Netherlands)
+			//4 digits followed by 2 uppercase letters (https://en.wikipedia.org/wiki/Postal_codes_in_the_Netherlands)
 			if (options.reformat) {
 				if (/^\d{4}[ \-]?[A-Z]{2}$/.test(zipValue)) {
 					isValid = true;
@@ -180,7 +180,7 @@ export default class CountrySpecifics {
 				}
 			}
 		} else if (country == 'BR') {
-			//5 digits, a dash, then 3 digits (http://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)
+			//5 digits, a dash, then 3 digits (https://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)
 			zipValue = zipValue.replace('.', '');  //some people seem to put a dot after the first two digits
 			if (/^\d{5}-?\d{3}$/.test(zipValue)) {
 				isValid = true;
@@ -212,7 +212,8 @@ export default class CountrySpecifics {
 
 	static firstnameLastnameOrder(country, options) {
 		if (!options) options = {};
-		if (['US', 'CA', 'AU', 'NZ', /*Western Europe from here: */ 'AD', 'AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'GR', 'IS', 'IE', 'IT', 'LI', 'LU', 'MT', 'MC', 'NL', 'NO', 'SM', 'SE', 'CH', 'GB'].indexOf(country) > -1) {  // Western Europe: http://en.wikipedia.org/wiki/Western_Europe#Western_European_and_Others_Group
+		var order;
+		if (['US', 'CA', 'AU', 'NZ', /*Western Europe from here: */ 'AD', 'AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'GR', 'IS', 'IE', 'IT', 'LI', 'LU', 'MT', 'MC', 'NL', 'NO', 'SM', 'SE', 'CH', 'GB'].indexOf(country) > -1) {  // Western Europe: https://en.wikipedia.org/wiki/Western_Europe#Western_European_and_Others_Group
 			order = ['firstname', 'lastname'];
 			if (options.jQuery) {
 				options.jQuery(options.firstnameSelector, options.optionalContext).insertBefore(options.jQuery(options.lastnameSelector, options.optionalContext));
@@ -228,7 +229,8 @@ export default class CountrySpecifics {
 
 	static dateFieldOrder(country, options) {
 		if (!options) options = {};
-		if (['US', 'CA'].indexOf(country) > -1) {  //NOTE: .insertBefore() only works with element are next to each other (http://stackoverflow.com/questions/698301/is-there-a-native-jquery-function-to-switch-elements)
+		var order;
+		if (['US', 'CA'].indexOf(country) > -1) {  //NOTE: .insertBefore() only works with element are next to each other (https://stackoverflow.com/questions/698301/is-there-a-native-jquery-function-to-switch-elements)
 			order = ['month', 'day', 'year'];
 			if (options.jQuery && options.dateContainerSelector) {
 				options.jQuery(options.dateContainerSelector, options.optionalContext)
@@ -253,6 +255,7 @@ export default class CountrySpecifics {
 					.append(options.jQuery(options.yearSelector, options.optionalContext));
 			}
 		}
+		return order;
 	}
 
 	/**
