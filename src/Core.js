@@ -168,4 +168,43 @@ export default class Core {
 		}, 0);
 	}
 
+	/**
+	 * Simple conversion of basic variables to YAML
+	 *
+	 * For more advanced conversion use a library like `js-yaml` or `yaml` from npm.
+	 *
+	 * @param {object} options : Available options:
+	 *   - `indent` : Custom number of spaces as indentation. Default: 2
+	 *   - `encloseStrings` : Set true to enclose string with "" (except if string itself contains a ") so you know it's a string and not a number or boolean
+	 */
+	static toYaml(variable, options = {}, level = 0) {
+		const indent = options.indent ?? 2;  // number of spaces for YAML indentation
+		const spaces = ' '.repeat(indent).repeat(level);
+		if (typeof variable === 'object' && variable !== null) {
+			if (Array.isArray(variable)) {
+				// Handle arrays
+				return variable
+					.map(item => `${spaces}- ${this.toYaml(item, options, level + 1).trim()}`)
+					.join('\n');
+			} else {
+				// Handle objects
+				return Object.keys(variable)
+					.map(key => `${spaces}${key}:${typeof variable[key] === 'object' ? `\n${this.toYaml(variable[key], options, level + 1)}` : ` ${this.toYaml(variable[key], options, 0)}`}`)
+					.join('\n');
+			}
+		} else {
+			// Handle primitive values
+			if (typeof variable == 'string') {
+				if (!options.encloseStrings || variable.indexOf('"') > -1) {
+					return variable;  //will be confused if the string itself also has "
+				} else {
+					return '"'+ variable +'"';  //makes strings be enclosed with "" and quotes escaped within the string
+				}
+			} else {
+				return JSON.stringify(variable);  //makes strings be enclosed with "" and quotes escaped within the string
+			}
+			// return variable === null ? 'null' : variable.toString();  //throws strange error "TypeError: Cannot read properties of undefined (reading 'toString')"
+		}
+	}
+
 }

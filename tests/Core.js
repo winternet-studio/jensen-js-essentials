@@ -106,4 +106,17 @@ describe('Core', function() {
 		});
 	});
 
+	describe('toYaml()', function() {
+		it('', function() {
+			assert.equal(Core.toYaml({details: {name: 'John', age: 45}}), 'details:\n  name: John\n  age: 45');
+			assert.equal(Core.toYaml(null), 'null');
+			assert.equal(Core.toYaml(false), 'false');
+			assert.equal(Core.toYaml(''), '');
+			assert.equal(Core.toYaml('John'), 'John');
+			assert.equal(Core.toYaml({details: {name: 'John', age: 45}}, {encloseStrings: true}), 'details:\n  name: "John"\n  age: 45');
+			assert.equal(Core.toYaml({details: {name: 'John "Doe" Johnson', age: 45}}, {encloseStrings: true}), 'details:\n  name: John "Doe" Johnson\n  age: 45');
+			assert.equal(Core.toYaml([4, 8, 15]), '- 4\n- 8\n- 15');
+		});
+	});
+
 });
