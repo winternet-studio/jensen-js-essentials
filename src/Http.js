@@ -283,7 +283,7 @@ export default class Http {
 					var resultMsgPlain = texts.textSuccess;
 					if (msgCount > 0) {
 						resultMsg += ' '+ texts.textPleaseNote +':</span><br><br><span class="messages result-messages"><ul>';
-						resultMsgPlain += ' '+ texts.textPleaseNote +':';
+						resultMsgPlain += ' '+ texts.textPleaseNote +':\n';
 						Object.values(notices).forEach(notice => {
 							resultMsg += '<li>'+ notice +'</li>';
 							resultMsgPlain += '\n - '+ notice;
@@ -307,7 +307,7 @@ export default class Http {
 				success = false;
 				if (['resultOnly', 'resultOnlyQuiet'].indexOf(responseFormat) === -1) {
 					var errMsg = '<span class="result-text error-text">'+ texts.textErrorBecause +'</span><br><br><span class="messages error-messages"><ul>';
-					var errMsgPlain = texts.textErrorBecause;
+					var errMsgPlain = texts.textErrorBecause +'\n';
 					var count = 0;
 					Object.keys(errors).forEach(attribute => {
 						if (options.skipNamedErrors.indexOf(attribute) == -1) {
