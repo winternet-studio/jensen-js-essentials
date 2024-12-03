@@ -67,6 +67,7 @@ describe('Http', function() {
 		});
 	});
 
+	/*
 	describe('standardRequest() ', function() {
 		it('should call successCallback with postActions array', function(done) {
 			Http.standardRequest('GET', 'https://httpbin.org/get', {
@@ -95,6 +96,7 @@ describe('Http', function() {
 			});
 		});
 	});
+	*/
 
 	describe('standardRequest()', function() {
 		it('should call alwaysCallback', function(done) {

@@ -24,7 +24,7 @@ export default class Http {
 	 *   - {object} formDataBody - Object of data/parameters to send in a POST/PUT/PATCH request. Will be sent as `application/x-www-form-urlencoded`
 	 *   - {string|object} responseFormat
 	 *   - {string|object} formFieldNames - Array of strings with attributes/field names in the form. Set this to when using responseFormat `resultError` or `resultErrorQuiet` and processForm, so that error messages for specific fields are only shown next to the field in the form and not in the generic alert box
-	 *   - {object|array|string|callable} postActions - Actions to be done after the request has completed. Object with any of the following keys, or array of objects each with a single of the following keys:
+	 *   - {object|string|callable} postActions - Actions to be done after the request has completed. Object with any of the following keys, (DISABLED UNTIL WE NEED IT: or array of objects each with a single of the following keys):
 	 *   	- NOT IMPLEMENTED YET! `successMessage` : set value with a message to the user if operation succeeds, eg. "Thank you for contacting us."
 	 *   	- NOT IMPLEMENTED YET! `errorMessage` : set value with a message to the user if operation fails, eg. "Sorry, you message could not be sent."
 	 *   	- NOT IMPLEMENTED YET! `reloadPage` : set to true to reload the page if operation succeeds (must be the last action to perform)
@@ -179,7 +179,7 @@ export default class Http {
 					if (typeof options.postActions === 'function') {
 						options.postActions(resultObject);
 					} else {
-						if (!Array.isArray(options.postActions)) {  //convert object to array of objects
+						if (!Array.isArray(options.postActions)) {  //convert object to array of objects (if we eventually determine we never need the array we can remove the whole array handling)
 							var actionsArray = [];
 							Object.keys(options.postActions).forEach(item => {
 								var obj = {};
@@ -187,6 +187,8 @@ export default class Http {
 								actionsArray.push(obj);
 							});
 							options.postActions = actionsArray;
+						} else {
+							throw 'Passing postActions as an array to Http.standardRequest() has been disabled until the need arises.';
 						}
 						Object.values(options.postActions).forEach((action) => {
 							// TODO: process the different actions - copy and adapt from appJS.doAjax() in yii2-libs.
