@@ -43,7 +43,32 @@ describe('Http', function() {
 	});
 
 	describe('standardRequest()', function() {
-		it('should call successCallback', function(done) {
+		it('should call successCallback with postActions object', function(done) {
+			Http.standardRequest('GET', 'https://httpbin.org/get', {
+				urlencodedBody: {firstname: 'John', lastname: 'Doe'},
+				postActions: {
+					successCallback: (result) => {
+						try {
+							assert.equal(result.data.url, 'https://httpbin.org/get?firstname=John&lastname=Doe');
+							done();
+						} catch (err) {
+							done(err);
+						}
+					},
+					errorCallback: (result) => {
+						try {
+							throw 'Incorrect callback was called';
+						} catch (err) {
+							done(err);
+						}
+					},
+				},
+			});
+		});
+	});
+
+	describe('standardRequest() ', function() {
+		it('should call successCallback with postActions array', function(done) {
 			Http.standardRequest('GET', 'https://httpbin.org/get', {
 				urlencodedBody: {firstname: 'John', lastname: 'Doe'},
 				postActions: [
@@ -75,18 +100,16 @@ describe('Http', function() {
 		it('should call alwaysCallback', function(done) {
 			Http.standardRequest('GET', 'https://httpbin.org/get?type=person', {
 				urlencodedBody: {firstname: 'John', lastname: 'Doe'},
-				postActions: [
-					{
-						alwaysCallback: (result) => {
-							try {
-								assert.equal(result.data.url, 'https://httpbin.org/get?type=person&firstname=John&lastname=Doe');
-								done();
-							} catch (err) {
-								done(err);
-							}
-						},
+				postActions: {
+					alwaysCallback: (result) => {
+						try {
+							assert.equal(result.data.url, 'https://httpbin.org/get?type=person&firstname=John&lastname=Doe');
+							done();
+						} catch (err) {
+							done(err);
+						}
 					},
-				],
+				},
 			});
 		});
 	});
