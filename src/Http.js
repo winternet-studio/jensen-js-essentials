@@ -21,7 +21,7 @@ export default class Http {
 	 * @param {object} options : Available options:
 	 *   - {object} jsonBody - Object of data/parameters to send in a POST/PUT/PATCH request. Will be JSON stringified and sent as `application/json`
 	 *   - {object} urlencodedBody - Object of data/parameters to send in a POST/PUT/PATCH request. Will be sent as `application/x-www-form-urlencoded`
-	 *   - {object} formDataBody - Object of data/parameters to send in a POST/PUT/PATCH request. Will be sent as `application/x-www-form-urlencoded`
+	 *   - {object} formDataBody - FormData object to send in a POST/PUT/PATCH request. Will be sent as `multipart/form-data`
 	 *   - {string|object} responseFormat
 	 *   - {string|object} formFieldNames - Array of strings with attributes/field names in the form. Set this to when using responseFormat `resultError` or `resultErrorQuiet` and processForm, so that error messages for specific fields are only shown next to the field in the form and not in the generic alert box
 	 *   - {object|string|callable} postActions - Actions to be done after the request has completed. Object with any of the following keys, (DISABLED UNTIL WE NEED IT: or array of objects each with a single of the following keys):
@@ -91,6 +91,8 @@ export default class Http {
 				options.fetchOptions.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 				options.fetchOptions.body = this.toUrlEncoded(options.urlencodedBody);
 			}
+		} else if (typeof options.formDataBody !== 'undefined') {
+			options.fetchOptions.body = options.formDataBody;
 		}
 
 		var isInCallback = false;
