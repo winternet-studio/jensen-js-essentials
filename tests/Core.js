@@ -94,6 +94,24 @@ describe('Core', function() {
 		});
 	});
 
+	describe('arrayExplicitSort()', function() {
+		it('', function() {
+			assert.deepEqual(Core.arrayExplicitSort([
+				{ name: 'Item B', status: 'done' },
+				{ name: 'Item C', status: 'in_progress' },
+				{ name: 'Item D', status: 'archived' },
+				{ name: 'Item A', status: 'pending' },
+				{ name: 'Item E', status: 'in_review' },
+			], 'status', ['pending', 'in_progress', 'done']), [
+				{ name: 'Item A', status: 'pending' },
+				{ name: 'Item C', status: 'in_progress' },
+				{ name: 'Item B', status: 'done' },
+				{ name: 'Item D', status: 'archived' },
+				{ name: 'Item E', status: 'in_review' },
+			]);
+		});
+	});
+
 	describe('uniqueArray()', function() {
 		it('', function() {
 			assert.deepEqual(Core.uniqueArray(['John', 'Michael', 'John', 'Nick']), ['John', 'Michael', 'Nick']);

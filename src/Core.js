@@ -142,6 +142,26 @@ export default class Core {
 	}
 
 	/**
+	 * Sort array items in a given explicit order
+	 *
+	 * Items not mentioned in the given order will be placed last.
+	 *
+	 * @param {array} array : Array to be sorted
+	 * @param {string} property : Name of property in which you'll be specifying the order of items in `explicitOrder`
+	 * @param {array} explicitOrder : Array of property values in the order you want the items
+	 */
+	static arrayExplicitSort(array, property, explicitOrder) {
+		const orderMap = new Map(explicitOrder.map((value, index) => [value, index]));
+
+		return array.slice().sort((a, b) => {
+			const aOrder = orderMap.has(a[property]) ? orderMap.get(a[property]) : Infinity;
+			const bOrder = orderMap.has(b[property]) ? orderMap.get(b[property]) : Infinity;
+
+			return aOrder - bOrder;
+		});
+	}
+
+	/**
 	 * Remove duplicates in an array
 	 *
 	 * Source: http://www.martienus.com/code/javascript-remove-duplicates-from-array.html
