@@ -116,4 +116,22 @@ describe('Http', function() {
 		});
 	});
 
+	describe('standardRequest()', function() {
+		it('should call alwaysCallback even on error', function(done) {
+			Http.standardRequest('GET', 'https://httpbin.org/status/500', {
+				urlencodedBody: {firstname: 'John', lastname: 'Doe'},
+				postActions: {
+					alwaysCallback: (result) => {
+						try {
+							assert.equal(result.abnormal, true);
+							done();
+						} catch (err) {
+							done(err);
+						}
+					},
+				},
+			});
+		});
+	});
+
 });

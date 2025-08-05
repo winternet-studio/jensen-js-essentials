@@ -38,7 +38,7 @@ export default class Http {
 	 *   		- `data` : response from server
 	 *   		- `success` : boolean true or false based on response from server
 	 *   		- `origOptions` : original options passed to this standardRequest() function
-	 *   	- `errorCallback` : set value to a string with function name or an anonymous function to call if operation fails. One argument is passed which will be an object with the following properties:
+	 *   	- `errorCallback` : set value to a string with function name or an anonymous function to call if operation fails (not called if request itself fails due to network error or invalid response, since this function is suppose to handle that). One argument is passed which will be an object with the following properties:
 	 *   		- `data` : response from server
 	 *   		- `success` : boolean true or false based on response from server
 	 *   		- `origOptions` : original options passed to this standardRequest() function
@@ -95,7 +95,7 @@ export default class Http {
 			options.fetchOptions.body = options.formDataBody;
 		}
 
-		var isInCallback = false;
+		var isInCallback = false, processedNormally = false;
 		this.executeFetch(url, options.fetchOptions)
 			.then(response => {
 				if (!response.ok) {
@@ -210,6 +210,7 @@ export default class Http {
 						});
 					}
 				}
+				processedNormally = true;
 			})
 			.catch(error => {
 				if (typeof error.json === 'function') {
@@ -230,6 +231,30 @@ export default class Http {
 					} else {
 						console.log(error);
 						alert('Network error. Please try again later.');
+					}
+				}
+				// MAYBE: Should we call errorCallback here as well? Or maybe not since the whole purpose of standardRequest is to auto-handle errors? If we DO end up collecting errors here we should store them `data.errors` and `data.errorsItemized` to match the expected response (either to be used in errorCallback or alwaysCallback in finally block)
+			})
+			.finally(() => {
+				if (!processedNormally) {  // Is basically only for when an error occurred and we went to .catch() instead
+					if (options.postActions) {
+						var resultObject = {
+							data: null,  // MAYBE: Try to collect response from catch() and pass it here?
+							success: false,
+							origOptions: options,
+							abnormal: true,
+						};
+						if (typeof options.postActions === 'function') {
+							options.postActions(resultObject);
+						} else {
+							if (!Array.isArray(options.postActions)) {  //convert object to array of objects (if we eventually determine we never need the array we can remove the whole array handling)
+								if (typeof options.postActions.alwaysCallback === 'function') {
+									options.postActions.alwaysCallback(resultObject);
+								}
+							} else {
+								throw 'Passing postActions as an array to Http.standardRequest() has been disabled until the need arises.';
+							}
+						}
 					}
 				}
 			});
