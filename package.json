@@ -1,6 +1,6 @@
 {
   "name": "jensen-js-essentials",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "type": "module",
   "description": "Some essential Javascript tools for web development",
   "main": "index.js",
