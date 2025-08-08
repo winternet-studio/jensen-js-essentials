@@ -265,7 +265,7 @@ export default class Http {
 		if (typeof document !== 'undefined' && document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')) {
 			finalOptions.headers = {
 				...finalOptions.headers,
-				'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');,
+				'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
 			};
 		}
 		return await fetch(url, finalOptions);
