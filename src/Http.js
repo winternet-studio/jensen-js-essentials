@@ -262,10 +262,10 @@ export default class Http {
 
 	static async executeFetch(url, options) {
 		const finalOptions = { ...options };
-		if (typeof localStorage !== 'undefined' && localStorage.csrfToken) {
+		if (typeof document !== 'undefined' && document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')) {
 			finalOptions.headers = {
 				...finalOptions.headers,
-				'X-CSRF-Token': localStorage.csrfToken,
+				'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');,
 			};
 		}
 		return await fetch(url, finalOptions);
