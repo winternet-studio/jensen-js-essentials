@@ -67,6 +67,10 @@ export default class Core {
 		return Math.round(number * precisionNumber)/precisionNumber;
 	}
 
+	static toInt(number) {
+		return parseInt(number, 10);
+	}
+
 	/**
 	 * Format a number
 	 *
