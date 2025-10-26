@@ -27,7 +27,7 @@ To install using Composer add this to your `composer.json`:
 ]
 ```
 
-Now install with `composer require npm-asset/jensen-js-essentials "^1.4.3"`.
+Now install with `composer require npm-asset/jensen-js-essentials "^1.5.0"`.
 -->
 
 
@@ -57,7 +57,7 @@ const fetchData = () => {
 
 ```js
 <script type="module">
-import Core from 'https://unpkg.com/jensen-js-essentials@1.4.3/src/Core.js';
+import Core from 'https://unpkg.com/jensen-js-essentials@1.5.0/src/Core.js';
 
 var result = Core.roundDecimals(34.6816764, 2);
 </script>
