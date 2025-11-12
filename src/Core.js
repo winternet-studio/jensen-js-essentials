@@ -193,6 +193,37 @@ export default class Core {
 	}
 
 	/**
+	 * Generate URL for this same page but with modified query string parameters according to the specified query string variables/parameters
+	 *
+	 * @param {object} params : Object with keys being query string variable name and value of course being the corresponding value
+	 *   - leave empty to generate the same URL as current one
+	 *   - to delete an existing parameter set the value to null
+	 * @param {object} $options : Options available:
+	 *   - `queryStringOnly` : only generate the query string (excluding path and `?`)
+	 * @return {string} : URL
+	 */
+	static pageUrl(params = {}, options = {}) {
+		const url = new URL(window.location.href);
+		const qs = new URLSearchParams(url.search);
+
+		for (const [key, value] of Object.entries(params)) {
+			if (value === null) {
+				qs.delete(key);
+			} else {
+				qs.set(key, value);
+			}
+		}
+
+		if (options.queryStringOnly) {
+			return qs.toString();
+		} else {
+			const path = url.origin + url.pathname;
+			const queryString = qs.toString();
+			return queryString ? `${path}?${queryString}` : path;
+		}
+	}
+
+	/**
 	 * Simple conversion of basic variables to YAML
 	 *
 	 * For more advanced conversion use a library like `js-yaml` or `yaml` from npm.
